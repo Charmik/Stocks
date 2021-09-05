@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "stock"
+version = "0.1.0"
+description = "publishing cheap companies"
+authors = ["Charm <charmik1994@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.9.6"
+timeloop = "^1.0.2"
+python-telegram-bot = "13.7"
+requests = "^2.26.0"
+tinvest = "^3.0.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
