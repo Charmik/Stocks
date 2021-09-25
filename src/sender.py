@@ -8,6 +8,7 @@ from telegram_bot import sendMessage
 
 
 class Sender:
+    SP500_COMPANIES_PATH: str = 'data/S&P500_wiki.txt'
     ALWAYS_GOOD_COMPANIES_PATH: str = 'data/good_companies.txt'
     LAST_GOOD_COMPANIES_PATH: str = 'obj/last_good_companies.txt'
 
@@ -15,11 +16,13 @@ class Sender:
     def send_result(stocks: List[AnalyzeResult], additional_info: List[AnyStr]):
         Sender.__send_result_to_telegram("📈\n", stocks, additional_info)
 
+
         message = "🌈 filtered companies:\n\n"
-        always_good_companies = Sender.__get_always_good_companies()
+        always_good_companies = Sender.__get_sp500_companies()
         filtered_results_by_good_companies = [elm for elm in stocks if elm.ticker in always_good_companies]
-        Sender.__send_result_to_telegram(message, filtered_results_by_good_companies, additional_info, 5,
+        Sender.__send_result_to_telegram(message, filtered_results_by_good_companies, additional_info, 10,
                                          update_good_companies_list=False)
+        print("send result to telegram")
 
     @staticmethod
     def __send_result_to_telegram(message: string, stocks: List[AnalyzeResult], additional_info: List[AnyStr],
@@ -36,10 +39,11 @@ class Sender:
             ev_to_ebitda_percent = round(stock.percent_ev_to_ebitda_less_than_history, 1)
             pe = round(stock.pe, 1)
             ev_to_ebitda = round(stock.current_ev_over_ebitda, 1)
-            message += ticker + '\n' + "pe_percent: " + str(pe_percent) \
-                       + "%\nev_to_ebitda_percent: " + str(ev_to_ebitda_percent) \
-                       + "%\np/e: " + str(pe) + "%\n" \
-                       + "ev_to_ebitda: " + str(ev_to_ebitda) + "\n" \
+            message += ticker + '\n' + \
+                       "p/e: " + str(pe) + "\n" \
+                       + "ev_to_ebitda: " + str(ev_to_ebitda) + "\n" + \
+                       "pe_percent: " + str(pe_percent) + "%\n" + \
+                       "ev_to_ebitda_percent: " + str(ev_to_ebitda_percent) + "%\n" \
                        + "https://www.macrotrends.net/stocks/charts/" + ticker + "/mohawk-industries/pe-ratio" + "\n\n"
         message = message + '\n' + str(len(stocks)) + ' companies'
         sendMessage(message)
@@ -110,4 +114,14 @@ class Sender:
                 for i in range(0, len(good_companies)):
                     good_companies[i] = good_companies[i].strip()
                 return good_companies
+        return []
+
+    @staticmethod
+    def __get_sp500_companies() -> List[AnyStr]:
+        if os.path.exists(Sender.SP500_COMPANIES_PATH):
+            with open(Sender.SP500_COMPANIES_PATH) as fp:
+                companies: List[string] = fp.readlines()
+                for i in range(0, len(companies)):
+                    companies[i] = companies[i].strip()
+                return companies
         return []

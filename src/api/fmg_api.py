@@ -6,6 +6,7 @@ from cache import Cache
 
 
 class FmgAPI:
+
     API_KEY: string = os.environ['FINANCIAL_MODELING_GREP_API']
     BASE_PATH = "obj"
 

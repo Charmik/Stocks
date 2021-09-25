@@ -1,6 +1,5 @@
 import datetime
 import os
-import traceback
 from typing import List
 
 from analyze_result import AnalyzeResult
@@ -31,7 +30,7 @@ def read_good_companies():
 
 
 def start():
-    years = 9
+    years = 15
     history = StockHistoryReader.read_history()
     tickers = history.get_tickers()
 
@@ -58,8 +57,10 @@ def start():
 
     print("Analysis is processed")
 
-    result = sorted(result, key=lambda cur: (
-        cur.percent_ev_to_ebitda_less_than_history is None, cur.percent_ev_to_ebitda_less_than_history))
+    result = sorted(result,
+                    key=lambda cur: (cur.percent_pe_less_than_history is None, cur.percent_pe_less_than_history))
+    # result = sorted(result, key=lambda cur: (
+    #     cur.percent_ev_to_ebitda_less_than_history is None, cur.percent_ev_to_ebitda_less_than_history))
 
     for res in result:
         print(res.ticker, res.pe, res.percent_pe_less_than_history, res.current_ev_over_ebitda,
@@ -73,6 +74,8 @@ def start():
 
 
 if __name__ == '__main__':
+    print("start main")
+    print("FINANCIAL_MODELING_GREP_API:", os.environ['FINANCIAL_MODELING_GREP_API'])
     try:
         start()
     except:

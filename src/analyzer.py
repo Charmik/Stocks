@@ -23,14 +23,14 @@ class Analyzer:
         self.years = years
 
     def analyze(self) -> bool:  # true if good company, false otherwise
-        res = Analyzer.NetIncomeFilter().filter(self.ticker, self.metrics, self.years)
-        if res is False:
-            return False
-        res = Analyzer.EpsFilter().filter(self.ticker, self.metrics, self.years)
-        if res is True:
-            print(self.ticker, "was approved")
+        res_net_income: bool = Analyzer.NetIncomeFilter().filter(self.ticker, self.metrics, self.years)
+        res_eps: bool = Analyzer.EpsFilter().filter(self.ticker, self.metrics, self.years)
 
-        return res
+        if res_net_income and res_eps is True:
+            print(self.ticker, "was approved")
+            return True
+
+        return False
 
     def get_percent_pe_less_than_history(self, current_pe: float) -> float:
         pes = []

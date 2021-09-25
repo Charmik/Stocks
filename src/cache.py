@@ -27,7 +27,9 @@ class Cache:
         now = datetime.datetime.now()
 
         last_modify_time = datetime.datetime.fromtimestamp(path.stat().st_mtime)
-        diff_hours = (now - last_modify_time).seconds / 60 / 60
+        diff = now - last_modify_time
+        diff_seconds = diff.total_seconds()
+        diff_hours = diff_seconds / 60 / 60
 
         if diff_hours > ttl_hours:
             os.remove(file_name)
